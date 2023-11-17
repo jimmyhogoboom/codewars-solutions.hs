@@ -1,3 +1,5 @@
+module Likes where
+
 import Text.Printf (printf)
 
 likes ls =
