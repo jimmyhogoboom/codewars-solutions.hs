@@ -10,14 +10,11 @@ import Data.Ord
 import Text.Regex.TDFA
 import Text.Regex.TDFA.Text ()
 
-test = "  //wont won't won't , e ... \"quote\""
-
-r = "[a-zA-Z0-9-' ]"
-
-testMap = Map.fromList [("word1", 1), ("word2", 2)]
-
-matches :: [String]
-matches = getAllTextMatches $ test =~ r
+regextTrial :: [String]
+regextTrial =
+  let test = "  //wont won't won't , e ... \"quote\""
+      r = "[a-zA-Z0-9-' ]"
+  in getAllTextMatches $ test =~ r
 
 valid :: String
 valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890' "
