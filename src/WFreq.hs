@@ -16,10 +16,23 @@ regextTrial =
       r = "[a-zA-Z0-9-' ]"
   in getAllTextMatches $ test =~ r
 
+letters :: String
+letters = "abcdefghijklmnopqrstuvwxyz"
+
 valid :: String
-valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890' "
-validWords :: [Char] -> [String]
-validWords = words . filter (`elem` valid)
+valid = letters ++ "' "
+
+prepare :: String -> String
+prepare = map (go . toLower)
+  where go c
+          | c `elem` valid = c
+          | otherwise = ' '
+
+validWord :: String -> Bool
+validWord = any (`elem` letters)
+
+validWords :: String -> [String]
+validWords = filter validWord . words . filter (`elem` valid)
 
 -- for each word, use the word as a key, add 1 to the existing value for that key
 incrementCount :: (Ord k, Num a) => Map.Strict.Map k a -> k -> Map.Strict.Map k a
@@ -29,7 +42,7 @@ countWords :: [Char] -> Map.Strict.Map String Integer
 countWords = foldl incrementCount Map.empty . validWords
 
 top3 :: String -> [String]
-top3 = map (map toLower . fst) . take 3 . sortOn (Down . snd) . Map.Strict.toList . countWords
+top3 = take 3 . map fst . sortOn (Down . snd) . Map.Strict.toList . countWords . prepare
 
 -- TODO: make this work using a reader or something so it:
 --   - avoids sorting the array of unique words,
@@ -47,3 +60,5 @@ top3 = map (map toLower . fst) . take 3 . sortOn (Down . snd) . Map.Strict.toLis
 -- --- strip invalid characters
 -- --- skip (Nothing?) if word is invalid (no letters)
 -- --- * Count the word *
+
+
